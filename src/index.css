@@ -1,13 +1,158 @@
-body {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,700;1,800;1,900&family=Lexend+Exa:wght@100..900&family=Lexend:wght@100..900&display=swap");
+
+* {
+  padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+  font-family: "Alegreya Sans SC", sans-serif;
+  scroll-behavior: smooth;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  background-color: #f6f5fa;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 2px;
+}
+::-webkit-scrollbar-track {
+  background-color: #b0c8ef;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #3375e0;
+  border-radius: 10px;
+}
+
+:root {
+  --toastify-color-success: #3375e0 !important;
+}
+
+/* LandingPage */
+
+@keyframes LandingInOut {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+    scale: 0.8;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+    scale: 1;
+  }
+}
+
+.LandingInOut {
+  animation: LandingInOut ease-in-out 2s;
+}
+
+/*  */
+@keyframes landing-appearLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+.landing-appearLeft{
+  animation: landing-appearLeft ease-in-out 2s;
+}
+
+/*  */
+@keyframes landingDownUp {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+.landingDownUp{
+  animation: landingDownUp ease-in-out 2s;
+}
+
+
+
+/* appearLeft */
+
+@keyframes appearLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+.appearLeft {
+  animation: appearLeft ease-in-out 5s;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+/* appearRight */
+
+@keyframes appearRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+.appearRight {
+  animation: appearRight ease-in-out 5s;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+
+/* InOut */
+@keyframes inOut {
+  from {
+    opacity: 0;
+    scale: 0;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.inOut {
+  animation: inOut ease-in-out 5s;
+  animation-timeline: view();
+  animation-range: entry 0% cover 50%;
+}
+
+/*  */
+
+.DownUp{
+  animation: landingDownUp ease-in-out 2s;
+  animation-timeline: view();
+  animation-range: entry 0% cover 50%;
+}
+
+
+.combined-animations {
+  animation: landingAppearLeft 1s ease-out, inOut 1s ease-in-out;
+}
+
+
+
