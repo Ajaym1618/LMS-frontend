@@ -2,7 +2,11 @@ import React from "react";
 import call from "../../../../assets/call.png";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { timeAgo } from "../../../../api";
+import { displayParticularCourse, timeAgo } from "../../../../api";
+import { MdOutlineAccessTime } from "react-icons/md";
+import { HiOutlineUserGroup } from "react-icons/hi2";
+import { BiCategoryAlt } from "react-icons/bi";
+import { HiArrowLongRight } from "react-icons/hi2";
 
 const Course = () => {
   const navigate = useNavigate();
@@ -11,6 +15,9 @@ const Course = () => {
   console.log(EduData);
   const CourseData = useSelector((state) => state.courseDetail);
   console.log(CourseData);
+  const enroll = useSelector((state) => state.enrolled);
+  console.log(enroll);
+  
 
   const filteredData = CourseData?.filter((val) => {
     if (!EduData || !EduData._id) {
@@ -21,6 +28,20 @@ const Course = () => {
   });
 
   console.log("filteredData", filteredData);
+
+  const filterStudents = (id) => {
+    return enroll.filter((data) => data.ParCourId === id);
+  };
+
+  const handleDisplayData = async(id) => {
+    try {
+      const response = await displayParticularCourse(id);
+      console.log("displayData",response.data);
+      navigate(`/post-course/${response.data?.courseTitle}/${response.data?._id}`)
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <div className="w-[100%] h-auto bg-[#f6f5fa] px-10 py-10 max-lg:px-5">
@@ -38,14 +59,14 @@ const Course = () => {
       </div>
       {filteredData.length > 0 ? (
         <div className="w-full h-auto flex justify-center pt-6">
-          <div className="w-[90%] h-auto grid grid-cols-4 gap-8 cursor-pointer">
+          <div className="w-[90%] h-auto grid grid-cols-4 gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1 max-sm:w-[100%] ">
             {filteredData?.map((course, i) => (
               <div
                 key={i}
-                className="w-[300px] h-[400px] bg-white shadow-xl shadow-[#9bc0f0] rounded-br-[60px] overflow-hidden duration-150 ease-in-out transition-all hover:scale-95"
+                className="w-[300px] h-[400px] bg-white shadow-xl shadow-[#9bc0f0] rounded-br-[60px] overflow-hidden duration-150 ease-in-out transition-all hover:scale-95 max-sm:w-[280px] max-sm:h-auto max-sm:m-auto"
               >
                 <video
-                  className="w-[100%] h-[50%] object-fill object-center border-b border-gray-300 "
+                  className="w-[100%] h-[200px] object-fill object-center border-b border-gray-300 "
                   poster={`http://localhost:5000/files/${course?.courseImage}`}
                 >
                   Your browser does not support the video tag.
@@ -54,20 +75,24 @@ const Course = () => {
                   <h1 className="text-2xl font-semibold">
                     {course?.courseTitle}
                   </h1>
-                  <p className="text-lg break-words leading-5 text-gray-500">
-                    {course?.courseDescription
-                      ? course.courseDescription
-                          .split(" ")
-                          .slice(0, 20)
-                          .join(" ") +
-                        (course.courseDescription.split(" ").length > 50
-                          ? "..."
-                          : "")
-                      : ""}
-                  </p>
-                  <div className="text-[#3375e0] font-semibold">
+                  <h1 className="text-lg font-semibold text-gray-500 flex items-center gap-1">
+                    <BiCategoryAlt className="text-[#3375e0]"/>
+                    {course?.courseCategory}
+                  </h1>
+                  <h1 className="text-lg font-medium flex items-center gap-1">
+                    <HiOutlineUserGroup className="text-[#3375e0]"/>
+                    Student: <span className=" font-bold">{filterStudents(course?._id).length}</span>
+                  </h1>
+                  <div className=" font-semibold flex gap-1 items-center">
+                    <MdOutlineAccessTime className="text-[#3375e0]"/>
                     Posted {timeAgo(new Date(course.timeStamp))}
                   </div>
+                </div>
+                <div className="w-full font-semibold py-3 px-8 flex justify-between items-center bg-[#3375e0] text-white hover:bg-[#1552b4] cursor-pointer" onClick={()=>handleDisplayData(course?._id)}>
+                  <h1>More info</h1>
+                  <h1 className="text-2xl">
+                    <HiArrowLongRight />
+                  </h1>
                 </div>
               </div>
             ))}

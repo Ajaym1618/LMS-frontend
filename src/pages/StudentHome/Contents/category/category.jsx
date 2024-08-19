@@ -19,7 +19,13 @@ import { IoMdPaperPlane } from "react-icons/io";
 import { TfiWrite } from "react-icons/tfi";
 import { BiFridge } from "react-icons/bi";
 import { FaCircleChevronLeft, FaCircleChevronRight } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { showParticularCourse } from "../../../../api";
+import { setParData } from "../../../../store/StudentSlices/particularSlice";
+import { useNavigate } from "react-router-dom";
+import { timeAgo } from "../../../../api";
+import { FaRupeeSign } from "react-icons/fa";
+
 const Category = () => {
   const categories = [
     { name: "All" },
@@ -68,8 +74,19 @@ const Category = () => {
     },
   ];
   const [category, setCategory] = useState("All");
+  const [id, setId] = useState("");
   const courseData = useSelector((state) => state.courseDetail);
+  const parData = useSelector((state) => state.parCourse);
+  const enrolled = useSelector((state) => state.enrolled);
+  const stuData = useSelector((state) => state.stuData);
+  console.log(stuData);
+
+  console.log("pardata", parData);
+  console.log("coursedata", courseData);
   console.log(category);
+  console.log(enrolled);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const scrollContainerRef = useRef(null);
 
@@ -94,6 +111,27 @@ const Category = () => {
       return val.courseCategory === category;
     }
   });
+
+  console.log("filter", filteredData);
+
+  const filteredEnroll = enrolled?.filter((val) => {
+    return (
+      val.EnrollId === stuData?._id &&
+      val.EnrollUserEmail === stuData?.userSignUpEmail
+    );
+  });
+  console.log(filteredEnroll);
+
+  const handleGetParticularCourse = async (id) => {
+    try {
+      const response = await showParticularCourse(id);
+      console.log(response.data);
+      dispatch(setParData(response.data));
+      navigate(`/category/${response.data?.courseTitle}/${response.data?._id}`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="relative w-[100%] h-auto px-5 py-6 bg-[#f6f5fa]">
@@ -133,35 +171,51 @@ const Category = () => {
       </div>
       {filteredData.length > 0 ? (
         <div className="w-[80%] grid grid-cols-4 gap-4 items-center justify-center py-6 m-auto max-lg:grid-cols-2 max-sm:grid-cols-1 max-lg:gap-8 max-sm:w-[100%] landing-appearLeft">
-          {filteredData?.map((course, i) => (
-            <div
-              key={i}
-              className="w-[300px] h-[380px] bg-white shadow-xl shadow-[#9bc0f0] rounded-bl-[60px] overflow-hidden duration-150 ease-in-out transition-all hover:scale-95 max-sm:m-auto inOut"
-            >
-              <video
-                className="w-[100%] h-[50%] object-fill object-center border-b border-gray-300"
-                poster={`http://localhost:5000/files/${course?.courseImage}`}
+          {filteredData?.map((course, i) => {
+            const isEnrolled = filteredEnroll.some(
+              (val) => val.ParCourId === course._id
+            );
+            console.log(isEnrolled);
+            return (
+              <div
+                key={i}
+                className="w-[300px] h-[380px] bg-white shadow-xl shadow-[#9bc0f0] rounded-bl-[60px] overflow-hidden duration-150 ease-in-out transition-all hover:scale-95 max-sm:m-auto inOut"
+                onClick={() => handleGetParticularCourse(course?._id)}
               >
-                Your browser does not support the video tag.
-              </video>
-              <div className="text-[#1f305e] px-4 py-2">
-                <h1 className="text-2xl font-semibold">
-                  {course?.courseTitle}
-                </h1>
-                <p className="text-lg break-words leading-5">
-                  {course?.courseDescription
-                    ? course.courseDescription
-                        .split(" ")
-                        .slice(0, 20)
-                        .join(" ") +
-                      (course.courseDescription.split(" ").length > 50
-                        ? "..."
-                        : "")
-                    : ""}
-                </p>
+                <video
+                  className="w-[100%] h-[50%] object-fill object-center border-b border-gray-300"
+                  poster={`http://localhost:5000/files/${course?.courseImage}`}
+                >
+                  Your browser does not support the video tag.
+                </video>
+                <div className="text-[#1f305e] px-4 py-1">
+                  <h1 className="text-2xl font-semibold">
+                    {course?.courseTitle}
+                  </h1>
+                  <div className="py-1">By {course?.educatorName}</div>
+                  <div className="py-1"> {course?.courseCategory}</div>
+                  <div className="py-1 text-[#3375e0]">
+                    posted {timeAgo(new Date(course?.timeStamp))}
+                  </div>
+                </div>
+                <div
+                  className="w-full flex justify-between items-center py-4 px-8 bg-[#3375e0] cursor-pointer"
+                  onClick={() => navigate("/category")}
+                >
+                  <h1 className="flex items-center text-lg text-white">
+                    <FaRupeeSign className="text-sm" />
+                    Free
+                  </h1>
+                  <button
+                    type="button"
+                    className=" text-white hover:border-b border-white "
+                  >
+                    {isEnrolled ? "Enrolled" : "Enroll now"}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className="w-[80%] h-[60vh] m-auto  flex flex-col items-center justify-center text-2xl text-[#3375e0]">

@@ -3,41 +3,47 @@ import { AiOutlineMail, AiOutlineLock } from "react-icons/ai";
 import usePasswordToggle from "../../../hooks/useTogglePassword";
 import { useNavigate } from "react-router-dom";
 import { InitializeApi, postEducatorLogin } from "../../../api";
-import {toast} from "react-toastify"
+import { toast } from "react-toastify";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const EducatorLogin = () => {
   const [passwordType, PasswordIcon] = usePasswordToggle();
+  const [spin, setSpin] = useState(false);
   const navigate = useNavigate();
-  const [educatorLogin,setEducatorLogin] = useState({
-    educatorLoginEmail:"",
-    educatorLoginPassword:""
-  })
+  const [educatorLogin, setEducatorLogin] = useState({
+    educatorLoginEmail: "",
+    educatorLoginPassword: "",
+  });
 
-  const handleEmployerLogin = (e)=>{
-    const { id,value } = e.target;
-    setEducatorLogin((prevData)=>({
-      ...prevData,[id]:value
-    }))
-  }
+  const handleEmployerLogin = (e) => {
+    const { id, value } = e.target;
+    setEducatorLogin((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
   console.log(educatorLogin);
-  
-  const handleLoginSubmit = async (e)=>{
+
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    try{
+    try {
       const response = await postEducatorLogin(educatorLogin);
-      if(response.status=== 200){
-        localStorage.setItem("token",response.data.token);
+      if (response.status === 200) {
+        localStorage.setItem("token", response.data.token);
+        setSpin(true);
         InitializeApi();
-        navigate('/educator-home')
-        toast.success("Login successful!")
+        setTimeout(() => {
+          navigate("/educator-home");
+          toast.success("Login successful!");
+        },1500);
       }
-    }catch(err){
+    } catch (err) {
       console.log(err);
-      toast.error("Invalid email or password")
-      
+      toast.error("Invalid email or password");
     }
-  }
-  
+  };
+
   return (
     <div className="w-[100%] h-full flex bg-[#f6f5fa]">
       <div className="w-[100%] h-full rounded-r-[10%] flex flex-col justify-center items-center">
@@ -65,7 +71,7 @@ const EducatorLogin = () => {
             <div className="flex items-center py-2">
               <AiOutlineLock className="text-gray-500 mr-2" />
               <input
-              id="educatorLoginPassword"
+                id="educatorLoginPassword"
                 type={passwordType}
                 placeholder="Enter your password"
                 className="text-lg font-semibold text-[#3375e0] appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
@@ -87,8 +93,15 @@ const EducatorLogin = () => {
           </div>
           <button
             type="submit"
-            className="w-full text-lg font-semibold bg-[#3375e0] text-white py-2 rounded-lg hover:bg-[#3375e0] transition duration-300 active:scale-95" 
+            className="w-full flex justify-center items-center gap-2 text-lg font-semibold bg-[#3375e0] text-white py-2 rounded-lg hover:bg-[#3375e0] transition duration-300 active:scale-95"
           >
+            {spin === true && (
+              <Spin
+                indicator={
+                  <LoadingOutlined spin className="font-bold text-white" />
+                }
+              />
+            )}
             Login
           </button>
         </form>

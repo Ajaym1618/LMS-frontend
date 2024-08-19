@@ -4,36 +4,46 @@ import Course from "./course/Course";
 import { useLocation } from "react-router-dom";
 import CoursePost from "../Contents/coursePost/coursePost";
 import CourseDescription from "./courseDescription/courseDescription";
+import EducatorFooter from "../Footer/footer";
+import EducatorParticularCourse from "./course/particularCourse/educatorParticularCourse";
 const Content = () => {
   const [content, setContent] = useState();
   const location = useLocation();
-
+  const paths = location.pathname;
+  
   useEffect(() => {
-    switch (location.pathname) {
-      case "/educator-home":
+    console.log("Current:", paths);
+    console.log(content);
+    switch (true) {
+      case paths === "/educator-home":
         setContent("educatorHome");
         break;
-      case "/post-course":
+      case paths ==="/post-course":
         setContent("postCourse");
         break;
-      case "/posting":
+      case paths ==="/posting":
         setContent("posting");
         break;
+      case /^\/post-course\/[^\/]+\/[^\/]+$/.test(paths):
+        setContent("specific");
+        break;
       default:
-        setContent("educatorHome");
+        setContent("educatorHome"); 
         break;
     }
-  }, [location]);
+  }, [paths]);
   return (
     <>
       {content === "educatorHome" && (
         <>
           <EducatorMain />
           <CourseDescription />
+          <EducatorFooter />
         </>
       )}
       {content === "postCourse" && <Course />}
       {content === "posting" && <CoursePost />}
+      {content === "specific" && <EducatorParticularCourse />}
     </>
   );
 };

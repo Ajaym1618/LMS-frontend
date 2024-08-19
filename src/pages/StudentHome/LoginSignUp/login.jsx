@@ -3,10 +3,13 @@ import { AiOutlineMail, AiOutlineLock } from "react-icons/ai";
 import usePasswordToggle from "../../../hooks/useTogglePassword";
 import { useNavigate } from "react-router-dom";
 import { InitializeApi, postUserLogin } from "../../../api";
-import {toast} from 'react-toastify'
+import {toast} from 'react-toastify';
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const UserLogin = () => {
   const [passwordType, PasswordIcon] = usePasswordToggle();
+  const [spin, setSpin] = useState(false);
   const navigate = useNavigate();
   const [loginData,setLoginData] = useState({
     userLoginEmail: "",
@@ -27,9 +30,13 @@ const UserLogin = () => {
       const response = await postUserLogin(loginData);
       if(response.status===200){
         localStorage.setItem("token",response.data.token);
+        setSpin(true);
         InitializeApi();
-        toast.success('Login Successful!')
-        navigate('/home')
+        setTimeout(()=>{
+          navigate('/home')
+          toast.success('Login Successful!')
+        },1500)
+       
       }else{
         console.log("login failed",response.data.message);
       }
@@ -88,8 +95,15 @@ const UserLogin = () => {
           </div>
           <button
             type="submit"
-            className="w-full text-lg font-semibold bg-[#3375e0] text-white py-2 rounded-lg hover:bg-[#2963b9] transition duration-300 active:scale-95" 
+            className="w-full flex justify-center items-center gap-2 text-lg font-semibold bg-[#3375e0] text-white py-2 rounded-lg hover:bg-[#2963b9] transition duration-300 active:scale-95" 
           >
+            {spin === true && (
+              <Spin
+                indicator={
+                  <LoadingOutlined spin className="font-bold text-white" />
+                }
+              />
+            )}
             Login
           </button>
         </form>

@@ -5,10 +5,13 @@ import { getCourseDetails, postCourseDetails } from "../../../../api";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { setCourseDetailData } from "../../../../store/EducatorSlices/courseDetailsSlice";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const CoursePost = () => {
   const [video, setVideo] = useState(null);
   const [image, setImage] = useState(null);
+  const [spin, setSpin] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // Data from store
@@ -17,7 +20,6 @@ const CoursePost = () => {
   const date = new Date();
   const timeStamp = date.getTime();
   console.log(timeStamp);
-  
 
   const [courseDetails, setCourseDetails] = useState({
     courseTitle: "",
@@ -47,18 +49,23 @@ const CoursePost = () => {
     }
 
     const formData = new FormData();
+    formData.append("educatorName", EduData?.educatorSignUpFullName);
     formData.append("courseId", EduData?._id);
     formData.append("courseTitle", courseDetails.courseTitle);
     formData.append("courseDescription", courseDetails.courseDescription);
     formData.append("courseCategory", courseDetails.courseCategory);
     formData.append("courseVideo", video);
     formData.append("courseImage", image);
-    formData.append("timeStamp",timeStamp);
+    formData.append("timeStamp", timeStamp);
 
     try {
       const response = await postCourseDetails(formData);
       console.log(response.data.message);
-      toast.success(response.data.message);
+      setSpin(true);
+      setTimeout(() => {
+        navigate("/post-course");
+        toast.success(response.data.message);
+      }, 1500);
       setCourseDetails({
         courseTitle: "",
         courseDescription: "",
@@ -66,29 +73,29 @@ const CoursePost = () => {
       });
       setImage(null);
       setVideo(null);
-      navigate('/post-course')
       getCourse();
+      
     } catch (err) {
       console.error(err);
       toast.error("An error occurred while posting the course.");
     }
   };
 
-  const getCourse = async() =>{
+  const getCourse = async () => {
     try {
       const response = await getCourseDetails();
       console.log(response.data);
       dispatch(setCourseDetailData(response.data));
     } catch (err) {
-        console.log(err.response.message);
+      console.log(err.response.message);
     }
-  }
+  };
 
   return (
-    <div className="w-[100%] h-[88vh] flex justify-center bg-[#f6f5fa]">
-      <div className="w-[60%] bg-white py-6 px-6">
+    <div className="w-[100%] h-auto flex justify-center bg-[#f6f5fa]">
+      <div className="w-[60%] bg-white py-6 px-6 max-lg:w-[90%]">
         <div className="py-2 pb-4 flex justify-between items-center">
-          <h1 className="text-4xl text-[#1f305e] font-semibold">
+          <h1 className="text-4xl text-[#1f305e] font-semibold max-sm:text-xl">
             Course Details
           </h1>
           <button
@@ -143,7 +150,12 @@ const CoursePost = () => {
                 onChange={handleCourseChange}
                 className="text-lg font-semibold text-[#3375e0] appearance-none bg-transparent border-none w-full py-1 px-2 leading-tight focus:outline-none"
               >
-                <option value="ComputerComputer Science & IT">Computer Science & IT</option>
+                <option value="select" defaultValue>
+                  Select
+                </option>
+                <option value="Computer Science & IT">
+                  Computer Science & IT
+                </option>
                 <option value="Sports">Sports</option>
                 <option value="Fitness & Wellness">Fitness & Wellness</option>
                 <option value="Cooking">Cooking</option>
@@ -176,7 +188,9 @@ const CoursePost = () => {
           </fieldset>
           {/* image */}
           <fieldset className="mb-4 border border-gray-500 rounded-lg px-4 bg-white focus-within:border-[#3375e0] focus-within:text-[#3375e0]">
-            <legend className="px-2 text-[#1f305e] font-semibold">Thumbnail Image</legend>
+            <legend className="px-2 text-[#1f305e] font-semibold">
+              Thumbnail Image
+            </legend>
             <div className="flex items-center py-2">
               <input
                 type="file"
@@ -192,8 +206,15 @@ const CoursePost = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-[100%] text-lg px-4 py-2 mt-2 font-semibold rounded-br-2xl bg-[#3375e0] text-white transition-all duration-150 ease-in-out border-2 active:scale-95 hover:bg-white hover:text-[#3375e0] border-[#3375e0] cursor-pointer max-sm:text-sm max-sm:px-2 max-sm:py-1"
+            className="group w-[100%] flex gap-2 justify-center items-center text-lg px-4 py-2 mt-2 font-semibold rounded-br-2xl bg-[#3375e0] text-white transition-all duration-150 ease-in-out border-2 active:scale-95 hover:bg-white hover:text-[#3375e0] border-[#3375e0] cursor-pointer max-sm:text-sm max-sm:px-2 max-sm:py-1"
           >
+            {spin === true && (
+              <Spin
+                indicator={
+                  <LoadingOutlined spin className="font-bold text-white" />
+                }
+              />
+            )}
             Post
           </button>
         </form>

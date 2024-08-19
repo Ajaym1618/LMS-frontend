@@ -3,13 +3,25 @@ import logo from "../../../assets/Logo.png";
 import { useNavigate } from "react-router-dom";
 import { LiaUserCircle } from "react-icons/lia";
 import { toast } from "react-toastify";
-import { getCourseDetails, InitializeApi } from "../../../api";
+import { getCourseDetails, getEnroll, getStudentData, InitializeApi } from "../../../api";
 import { setCourseDetailData } from "../../../store/EducatorSlices/courseDetailsSlice";
+import { setStuData } from '../../../store/StudentSlices/studentDataSlice';
+import { setEnrollData } from '../../../store/StudentSlices/enrolledDataSlice';
 import { useDispatch } from "react-redux";
 const StudentHeader = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const grtStudentData = async() =>{
+    try {
+      const response = await getStudentData();
+      console.log(response.data.student);
+      dispatch(setStuData(response.data.student))
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   const getCourse = async () => {
     try {
@@ -21,6 +33,16 @@ const StudentHeader = () => {
     }
   };
 
+  const getEnrollData = async()=>{
+    try {
+      const response = await getEnroll();
+      console.log(response.data.enroll);
+      dispatch(setEnrollData(response.data.enroll))
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   const handleLogOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("studentId");
@@ -31,10 +53,12 @@ const StudentHeader = () => {
   useEffect(() => {
     InitializeApi();
     getCourse();
+    grtStudentData();
+    getEnrollData();
   }, []);
 
   return (
-    <div className="w-[100%] h-[12vh] bg-white px-20 py-2 shadow-sm shadow-slate-400 flex items-center justify-between z-10 sticky top-0 max-lg:px-10 max-sm:px-2">
+    <div className="w-[100%] h-[12vh] bg-white px-20 py-2 shadow-sm shadow-slate-400 flex items-center justify-between z-50 sticky top-0  max-lg:px-10 max-sm:px-2">
       <div className="w-[300px] h-full flex items-center max-sm:w-[150px] ">
         <img src={logo} alt="logo" className="w-full" />
       </div>

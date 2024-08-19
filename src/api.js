@@ -23,10 +23,9 @@ export const InitializeApi = () => {
         response => response, 
         error => {
             if (error.response && error.response.status === 401) {
-                // Token has expired or is invalid
+                toast.error('Session expired. Please login again!'); 
                 localStorage.removeItem("token"); 
                 window.location.href = "/login";
-                toast.error('Session expired. Please login again!'); 
             }
             return Promise.reject(error);
         }
@@ -62,8 +61,12 @@ export const timeAgo = (date) => {
 
 // student 
 
-export const postUserSignUp =(payload)=> axios.post('http://localhost:5000/signup',payload)
-export const postUserLogin = (payload)=> axios.post('http://localhost:5000/login',payload)
+export const postUserSignUp =(payload)=> axios.post('http://localhost:5000/signup',payload);
+export const postUserLogin = (payload)=> axios.post('http://localhost:5000/login',payload);
+export const getStudentData = () => Api.get('/students');
+export const showParticularCourse = (id) => Api.get(`/particular/${id}`);
+export const postEnrollData = (payload) => Api.post('/enroll',payload);
+export const getEnroll = () => Api.get('/get-enroll');
 
 
 // Educator
@@ -72,3 +75,5 @@ export const postEducatorLogin = (payload)=> axios.post('http://localhost:5000/e
 export const postCourseDetails = (payload)=> axios.post('http://localhost:5000/course-details',payload)
 export const getEducatorData = () => Api.get('/educatorData');
 export const getCourseDetails = ()=> Api.get('/details');
+export const displayParticularCourse = (id) => Api.get(`/specific/${id}`);
+export const deleteCourse = (id) => Api.delete(`/delete/${id}`);

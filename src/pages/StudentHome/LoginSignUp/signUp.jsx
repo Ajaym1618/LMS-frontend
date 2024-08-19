@@ -14,30 +14,83 @@ const UserSignUp = () => {
     userSignUpPassword: "",
     userSignUpConfirmPassword: "",
   });
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  const handleSignUpChange = (e)=>{
-    const { id , value } = e.target;
-    setSignUpData((prevData)=>(
-      {
-        ...prevData,[id]:value
-      }
-    ))
-  }
+  const handleSignUpChange = (e) => {
+    const { id, value } = e.target;
+    setSignUpData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
   console.log(signUpData);
 
-  const handlePostSignUpData = async (e)=>{
+  const handlePostSignUpData = async (e) => {
     e.preventDefault();
-    try{
-      const response = await postUserSignUp(signUpData);
-      navigate("/login")
-      toast.success(response.data.message);
-    }catch(err){
-      console.log(err);
-      toast.error("something went wrong")
+
+    // Email validation regex pattern
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+    // Password validation regex patterns
+    const minLengthPattern = /.{8,}/;
+    const uppercasePattern = /[A-Z]/;
+    const lowercasePattern = /[a-z]/;
+    const digitPattern = /\d/;
+    const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
+
+    // Extracting data from the form
+    const {
+      userSignUpFullName,
+      userSignUpEmail,
+      userSignUpPassword,
+      userSignUpConfirmPassword,
+    } = signUpData;
+
+    // Validate email format
+    if (!emailPattern.test(userSignUpEmail)) {
+      toast.error("Invalid email format");
+      return;
     }
-  }
-  
+
+    // Validate password format
+    if (!minLengthPattern.test(userSignUpPassword)) {
+      toast.error("Password must be at least 8 characters long");
+      return;
+    }
+    if (!uppercasePattern.test(userSignUpPassword)) {
+      toast.error("Password must contain at least one uppercase letter");
+      return;
+    }
+    if (!lowercasePattern.test(userSignUpPassword)) {
+      toast.error("Password must contain at least one lowercase letter");
+      return;
+    }
+    if (!digitPattern.test(userSignUpPassword)) {
+      toast.error("Password must contain at least one digit");
+      return;
+    }
+    if (!specialCharPattern.test(userSignUpPassword)) {
+      toast.error(
+        "Password must contain at least one special character like @, #, etc."
+      );
+      return;
+    }
+
+    // Validate passwords match
+    if (userSignUpPassword !== userSignUpConfirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await postUserSignUp(signUpData);
+      navigate("/login");
+      toast.success(response.data.message);
+    } catch (err) {
+      console.log(err);
+      toast.error("something went wrong");
+    }
+  };
 
   return (
     <div className="w-[100%] h-full flex bg-[#f6f5fa]">
@@ -46,7 +99,10 @@ const UserSignUp = () => {
           Become a member at{" "}
           <span className="text-[#3375e0] pl-1">MindSpark</span>
         </h2>
-        <form className="w-[60%] max-lg:w-[90%]" onSubmit={handlePostSignUpData}>
+        <form
+          className="w-[60%] max-lg:w-[90%]"
+          onSubmit={handlePostSignUpData}
+        >
           <fieldset className="mb-4 border border-gray-300 rounded-lg px-4 bg-white">
             <legend className="px-2 text-gray-700 font-semibold">
               FullName

@@ -27,6 +27,68 @@ const UserSignUp = () => {
   
 const handlePostSignUpData = async(e)=>{
   e.preventDefault();
+  const isDataComplete = Object.values(educatorSignUpData).every(
+    (value) => value !== undefined && value !== ""
+  );
+
+  if (!isDataComplete) {
+    toast.error("Please enter all the details");
+    return;
+  }
+  // Email validation regex pattern
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+  // Password validation regex patterns
+  const minLengthPattern = /.{8,}/;
+  const uppercasePattern = /[A-Z]/;
+  const lowercasePattern = /[a-z]/;
+  const digitPattern = /\d/;
+  const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
+
+  // Extracting data from the form
+  const {
+    educatorSignUpFullName,
+    educatorSignUpEmail,
+    educatorSignUpMobileNo,
+    educatorSignUpPassword,
+    educatorSignUpConfirmPassword
+  } = educatorSignUpData;
+
+  // Validate email format
+  if (!emailPattern.test(educatorSignUpEmail)) {
+    toast.error("Invalid email format");
+    return;
+  }
+
+  // Validate password format
+  if (!minLengthPattern.test(educatorSignUpPassword)) {
+    toast.error("Password must be at least 8 characters long");
+    return;
+  }
+  if (!uppercasePattern.test(educatorSignUpPassword)) {
+    toast.error("Password must contain at least one uppercase letter");
+    return;
+  }
+  if (!lowercasePattern.test(educatorSignUpPassword)) {
+    toast.error("Password must contain at least one lowercase letter");
+    return;
+  }
+  if (!digitPattern.test(educatorSignUpPassword)) {
+    toast.error("Password must contain at least one digit");
+    return;
+  }
+  if (!specialCharPattern.test(educatorSignUpPassword)) {
+    toast.error(
+      "Password must contain at least one special character like @, #, etc."
+    );
+    return;
+  }
+
+  // Validate passwords match
+  if (educatorSignUpPassword !== educatorSignUpConfirmPassword) {
+    toast.error("Passwords do not match");
+    return;
+  }
   try{
     const response = await postEducatorSignUp(educatorSignUpData);
     console.log(response.data.message);
