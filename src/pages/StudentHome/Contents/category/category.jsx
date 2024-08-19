@@ -184,7 +184,7 @@ const Category = () => {
               >
                 <video
                   className="w-[100%] h-[50%] object-fill object-center border-b border-gray-300"
-                  poster={`http://localhost:5000/files/${course?.courseImage}`}
+                  poster={`https://lms-backend-o2wb.onrender.com/files/${course?.courseImage}`}
                 >
                   Your browser does not support the video tag.
                 </video>

@@ -94,10 +94,10 @@ const StudentParticularCourse = () => {
             <video
               className="w-[100%] h-[50vh] object-fill object-center max-sm:h-[30vh]"
               controls={enrollFiltered}
-              poster={`http://localhost:5000/files/${parData?.courseImage}`}
+              poster={`https://lms-backend-o2wb.onrender.com/files/${parData?.courseImage}`}
             >
               <source
-                src={`http://localhost:5000/files/${parData.courseVideo}`}
+                src={`https://lms-backend-o2wb.onrender.com/files/${parData.courseVideo}`}
                 type="video/mp4"
               />
               Your browser does not support the video tag.
