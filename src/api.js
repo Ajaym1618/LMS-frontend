@@ -7,7 +7,7 @@ let Api;
 export const InitializeApi = () => {
     const token = localStorage.getItem("token");
     const defaultOptions = {
-        baseURL: "http://localhost:5000", 
+        baseURL: "https://lms-backend-o2wb.onrender.com", 
         headers: {
             "Content-Type": "application/json" 
         }
@@ -61,8 +61,8 @@ export const timeAgo = (date) => {
 
 // student 
 
-export const postUserSignUp =(payload)=> axios.post('http://localhost:5000/signup',payload);
-export const postUserLogin = (payload)=> axios.post('http://localhost:5000/login',payload);
+export const postUserSignUp =(payload)=> axios.post('https://lms-backend-o2wb.onrender.com/signup',payload);
+export const postUserLogin = (payload)=> axios.post('https://lms-backend-o2wb.onrender.com/login',payload);
 export const getStudentData = () => Api.get('/students');
 export const showParticularCourse = (id) => Api.get(`/particular/${id}`);
 export const postEnrollData = (payload) => Api.post('/enroll',payload);
@@ -70,9 +70,9 @@ export const getEnroll = () => Api.get('/get-enroll');
 
 
 // Educator
-export const postEducatorSignUp = (payload)=> axios.post('http://localhost:5000/educator-signup',payload)
-export const postEducatorLogin = (payload)=> axios.post('http://localhost:5000/educator-login',payload)
-export const postCourseDetails = (payload)=> axios.post('http://localhost:5000/course-details',payload)
+export const postEducatorSignUp = (payload)=> axios.post('https://lms-backend-o2wb.onrender.com/educator-signup',payload)
+export const postEducatorLogin = (payload)=> axios.post('https://lms-backend-o2wb.onrender.com/educator-login',payload)
+export const postCourseDetails = (payload)=> axios.post('https://lms-backend-o2wb.onrender.com/course-details',payload)
 export const getEducatorData = () => Api.get('/educatorData');
 export const getCourseDetails = ()=> Api.get('/details');
 export const displayParticularCourse = (id) => Api.get(`/specific/${id}`);
