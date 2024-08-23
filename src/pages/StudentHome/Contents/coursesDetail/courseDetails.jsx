@@ -36,7 +36,7 @@ const CourseDetails = () => {
             >
               <video
                 className="w-[100%] h-[50%] object-fill object-center border-b border-gray-300"
-                poster={`https://lms-backend-o2wb.onrender.com/files/${course?.courseImage}`}
+                poster={`http://localhost:5000/files/${course?.courseImage}`}
               >
                 Your browser does not support the video tag.
               </video>
@@ -71,7 +71,7 @@ const CourseDetails = () => {
       ) : (
         <div className="w-full h-[40vh] text-4xl text-[#3375e0] flex justify-center items-center appearLeft">
           <span className="px-5 py-2 border-2 border-[#3375e0] border-dashed rounded-md">
-            No match found
+            No Courses uploaded
           </span>
         </div>
       )}

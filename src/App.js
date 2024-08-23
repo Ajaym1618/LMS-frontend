@@ -25,6 +25,7 @@ const App = () => {
           ></Route>
           <Route path="/home" element={<StudentHome/>}></Route>
           <Route path="/my-courses" element={<StudentHome type='/my-courses'/>}></Route>
+          <Route path="/profile" element={<StudentHome type='/profile'/>}></Route>
           <Route path="/my-courses/:name/:id" element={<StudentHome type='/my-courses/:name/:id' />}/>
           <Route path="/category" element={<StudentHome type='/category'/>}></Route>
           <Route path="/category/:name/:id" element={<StudentHome type='/category/:name/:id' />}/>
@@ -41,6 +42,7 @@ const App = () => {
           ></Route>
           <Route path="/educator-home" element={<EducatorHome/>}></Route>
           <Route path="/post-course" element={<EducatorHome type='/post-course'/>}></Route>
+          <Route path="/edu-profile" element={<EducatorHome type='/edu-profile'/>}></Route>
           <Route path="/post-course/:name/:id" element={<EducatorHome type='/post-course/:name/:id' />}/>
           <Route path="/posting" element={<EducatorHome type='/posting'/>}></Route>
         </Routes>

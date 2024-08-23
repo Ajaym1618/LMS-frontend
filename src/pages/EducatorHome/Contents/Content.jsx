@@ -6,6 +6,7 @@ import CoursePost from "../Contents/coursePost/coursePost";
 import CourseDescription from "./courseDescription/courseDescription";
 import EducatorFooter from "../Footer/footer";
 import EducatorParticularCourse from "./course/particularCourse/educatorParticularCourse";
+import Profile from "./Profile/Profile";
 const Content = () => {
   const [content, setContent] = useState();
   const location = useLocation();
@@ -23,6 +24,9 @@ const Content = () => {
         break;
       case paths ==="/posting":
         setContent("posting");
+        break;
+      case paths ==="/edu-profile":
+        setContent("eduProfile");
         break;
       case /^\/post-course\/[^\/]+\/[^\/]+$/.test(paths):
         setContent("specific");
@@ -44,6 +48,7 @@ const Content = () => {
       {content === "postCourse" && <Course />}
       {content === "posting" && <CoursePost />}
       {content === "specific" && <EducatorParticularCourse />}
+      {content === "eduProfile" && <Profile/>}
     </>
   );
 };

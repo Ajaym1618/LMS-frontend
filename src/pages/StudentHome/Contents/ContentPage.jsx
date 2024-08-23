@@ -9,6 +9,7 @@ import MyCourses from "./myCourses/myCourses";
 import StudentFooter from "../Footer/footer";
 import ParticularMyCourse from "./myCourses/particularMyCourse/particularMyCourse";
 import StudentParticularCourse from "./category/particularCourse/particularCourse";
+import Profile from "./Profile/Profile";
 
 const ContentPage = () => {
   const [content, setContent] = useState();
@@ -30,6 +31,9 @@ const ContentPage = () => {
         break;
       case path === "/category":
         setContent("category");
+        break;
+      case path === "/profile":
+        setContent("profile");
         break;
       case /^\/category\/[^\/]+\/[^\/]+$/.test(path):
         setContent("particular");
@@ -58,6 +62,7 @@ const ContentPage = () => {
       {content === "particular" && <StudentParticularCourse />}
       {content === "myParticular" && <ParticularMyCourse />}
       {content === "course" && <MyCourses />}
+      {content === "profile" && <Profile/>}
     </div>
   );
 };

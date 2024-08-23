@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import logo from "../../../assets/Logo.png";
 import { useNavigate } from "react-router-dom";
 import { LiaUserCircle } from "react-icons/lia";
-import { getCourseDetails, getEducatorData, getEnroll, InitializeApi } from "../../../api";
+import {
+  getCourseDetails,
+  getEducatorData,
+  getEnroll,
+  InitializeApi,
+} from "../../../api";
 import { setEduData } from "../../../store/EducatorSlices/educatorDataSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -35,15 +40,15 @@ const EducatorHeader = () => {
     }
   };
 
-  const getEnrollData = async() => {
+  const getEnrollData = async () => {
     try {
       const response = await getEnroll();
       console.log(response.data.enroll);
-      dispatch(setEnrollData(response.data.enroll))
+      dispatch(setEnrollData(response.data.enroll));
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
@@ -56,7 +61,7 @@ const EducatorHeader = () => {
     InitializeApi();
     getEducator();
     getCourse();
-    getEnrollData()
+    getEnrollData();
   }, []);
 
   useEffect(() => {
@@ -90,12 +95,20 @@ const EducatorHeader = () => {
         >
           <LiaUserCircle className="text-4xl" />
           {open && (
-            <div
-              className="w-auto h-auto px-6 py-2 flex flex-col justify-center absolute top-12 -right-8 bg-white border-2 border-dashed border-[#3375e0] rounded-md cursor-pointer transition-colors duration-100 ease-in-out hover:text-[#1f305e]"
-              onClick={handleLogOut}
-            >
+            <div className="w-auto h-auto py-2 flex flex-col justify-center absolute top-12 -right-8 bg-white border-2 border-dashed border-[#3375e0] rounded-md cursor-pointer ">
               <div className="absolute top-[-11px] right-[38px] rotate-[45deg] w-[20px] h-[20px] bg-white border-l-2 border-t-2 border-dashed border-[#3375e0] z-0 "></div>
-              Logout
+              <h1
+                className="px-6 pb-2 border-b-2 border-dashed border-[#3375e0] transition-colors duration-100 ease-in-out hover:text-[#1f305e]"
+                onClick={() => navigate("/edu-profile")}
+              >
+                Profile
+              </h1>
+              <h1
+                className="px-6 pt-2  transition-colors duration-100 ease-in-out hover:text-[#1f305e]"
+                onClick={handleLogOut}
+              >
+                Logout
+              </h1>
             </div>
           )}
         </div>
@@ -110,6 +123,12 @@ const EducatorHeader = () => {
             <div className="absolute top-[-11px] border-l-2 border-t-2 border-dashed border-[#3375e0] right-[38px] rotate-[45deg] w-[20px] h-[20px] bg-white z-0 max-sm:right-[26px]"></div>
             <div
               className="w-[100%] px-8 py-3 border-b-2 border-dashed border-[#3375e0]"
+              onClick={() => navigate("/edu-profile")}
+            >
+              Profile
+            </div>
+            <div
+              className="w-[100%] px-8 py-3 border-b-2 border-dashed border-[#3375e0]"
               onClick={() => navigate("/educator-home")}
             >
               Home
@@ -120,6 +139,7 @@ const EducatorHeader = () => {
             >
               Courses
             </div>
+
             <div className="w-[100%] px-8 py-3" onClick={handleLogOut}>
               Logout
             </div>
